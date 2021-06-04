@@ -16,10 +16,10 @@ namespace ExamApi.Services
             _databaseContext = databaseContext;
         }
 
-        public async Task<Invoice> Create(Invoice invoice)
+        public Invoice Create(Invoice invoice)
         {
-            await _databaseContext.AddAsync(invoice);
-            await _databaseContext.SaveChangesAsync();
+            _databaseContext.AddAsync(invoice);
+            _databaseContext.SaveChangesAsync();
             return invoice;
         }
 

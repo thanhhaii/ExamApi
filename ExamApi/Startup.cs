@@ -14,6 +14,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Cors.Infrastructure;
 
 namespace ExamApi
 {
@@ -35,8 +36,10 @@ namespace ExamApi
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "ExamApi", Version = "v1" });
             });
+
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DatabaseContext>(options => options.UseLazyLoadingProxies().UseSqlServer(connectionString));
+
             services.AddScoped<IInvoiceService, InvoiceServiceImpl>();
         }
 
@@ -49,6 +52,8 @@ namespace ExamApi
                 app.UseSwagger();
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ExamApi v1"));
             }
+
+            app.UseMiddleware<CorsMiddleware>();
 
             app.UseHttpsRedirection();
 
