@@ -39,7 +39,7 @@ namespace ExamApi
 
             var connectionString = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<DatabaseContext>(options => options.UseLazyLoadingProxies().UseSqlServer(connectionString));
-
+            services.AddCors();
             services.AddScoped<IInvoiceService, InvoiceServiceImpl>();
         }
 
@@ -53,6 +53,12 @@ namespace ExamApi
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "ExamApi v1"));
             }
 
+            app.UseCors(builder => builder
+                .AllowAnyHeader()
+                .AllowAnyMethod()
+                .SetIsOriginAllowed((host) => true)
+                .AllowCredentials()
+            );
             app.UseMiddleware<CorsMiddleware>();
 
             app.UseHttpsRedirection();

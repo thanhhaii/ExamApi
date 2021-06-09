@@ -11,10 +11,12 @@ namespace ExamApi.Services
 
         public List<Invoice> GetAllInvoice(int totalInvoice);
         public List<Invoice> GetInvoiceBasedOnPayment(string payment, int min, int max);
-        public int TotalInvoiceInOneMonthOfYear(int month, int year);
+        public double TotalInvoiceInOneMonthOfYear(int month, int year);
         public Invoice Create(Invoice invoice);
-        public Task<Invoice> Read(int id);
-        public Task<Invoice> Update(Invoice invoice);
-        public Task Delete(int id);
+        public Invoice Read(int id);
+        public Invoice Update(Invoice invoice);
+        public void Delete(int id);
+
+        public List<Invoice> GetAllInvoice();
     }
 }

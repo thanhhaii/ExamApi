@@ -34,6 +34,20 @@ namespace ExamApi.Controllers
             }
         }
 
+        [HttpGet("invoices")]
+        [Consumes("application/json")]
+        public IActionResult GetAllInvoices()
+        {
+            try
+            {
+                return Ok(_invoiceService.GetAllInvoice());
+            }
+            catch
+            {
+                return BadRequest();
+            }
+        }
+
         [HttpGet("listed-invoice")]
         [Consumes("application/json")]
         public IActionResult ListedInvoice([FromQuery(Name = "payment")]string payment, [FromQuery(Name ="max")]int max, [FromQuery(Name ="min")]int min)

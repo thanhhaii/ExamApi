@@ -19,15 +19,15 @@ namespace ExamApi.Services
         public Invoice Create(Invoice invoice)
         {
             _databaseContext.AddAsync(invoice);
-            _databaseContext.SaveChangesAsync();
+            _databaseContext.SaveChanges();
             return invoice;
         }
 
-        public async Task Delete(int id)
+        public void Delete(int id)
         {
-            var invoice = await _databaseContext.Invoices.FindAsync(id);
+            var invoice = _databaseContext.Invoices.Find(id);
             invoice.Status = false;
-            await _databaseContext.SaveChangesAsync();
+            _databaseContext.SaveChanges();
         }
 
         public List<Invoice> GetAllInvoice(int totalInvoice)
@@ -35,26 +35,31 @@ namespace ExamApi.Services
             return _databaseContext.Invoices.Where(i => i.Status == true).OrderByDescending(x => x.Created).Take(totalInvoice).ToList();
         }
 
+        public List<Invoice> GetAllInvoice()
+        {
+            return _databaseContext.Invoices.Where(i => i.Status == true).ToList();
+        }
+
         public List<Invoice> GetInvoiceBasedOnPayment(string payment, int min, int max)
         {
-            throw new NotImplementedException();
+            return _databaseContext.Invoices.Where(i => i.Status == true && i.Payment == payment && i.Total >= min && i.Total <= max).ToList();
         }
 
-        public async Task<Invoice> Read(int id)
+        public Invoice Read(int id)
         {
-            return await _databaseContext.Invoices.FindAsync(id);
+            return _databaseContext.Invoices.Find(id);
         }
 
-        public int TotalInvoiceInOneMonthOfYear(int month, int year)
+        public double TotalInvoiceInOneMonthOfYear(int month, int year)
         {
-            throw new NotImplementedException();
+            return (double)_databaseContext.Invoices.Where(i => i.Created.Value.Month == month && i.Created.Value.Year == year).Sum(i => i.Total);
         }
 
-        public async Task<Invoice> Update(Invoice invoice)
+        public Invoice Update(Invoice invoice)
         {
             _databaseContext.Entry(invoice).State = EntityState.Modified;
-            await _databaseContext.SaveChangesAsync();
-            return await _databaseContext.Invoices.FindAsync(invoice.Id);
+            _databaseContext.SaveChangesAsync();
+            return _databaseContext.Invoices.Find(invoice.Id);
         }
     }
 }
